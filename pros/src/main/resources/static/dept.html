@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Departments</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Departments</h2>
+    <ul id="deptList" class="list-group mb-4">
+        <!-- Departments will be loaded here -->
+    </ul>
+
+    <h4>Add Department</h4>
+    <form id="addDeptForm">
+        <div class="form-group">
+            <input type="text" id="newDept" class="form-control" placeholder="Enter department name" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Department</button>
+        <p id="addMessage" class="mt-2 text-center"></p>
+    </form>
+</div>
+
+<!-- JavaScript Code in your HTML file -->
+<script>
+    // Load departments from the server
+    function loadDepartments() {
+        fetch('http://localhost:8080/api/departments')
+            .then(response => response.json())
+            .then(data => {
+                const deptList = document.getElementById('deptList');
+                deptList.innerHTML = ''; // Clear list
+                data.forEach(dept => {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item d-flex justify-content-between align-items-center';
+
+                    // Department name clickable for navigation
+                    const deptName = document.createElement('span');
+                    deptName.textContent = dept;
+                    deptName.style.cursor = 'pointer';
+                    deptName.onclick = () => {
+                        window.location.href = `deptButtons.html?dept=${encodeURIComponent(dept)}`;
+                    };
+
+                    // Delete button
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'btn btn-danger btn-sm';
+                    deleteBtn.textContent = 'Delete';
+                    deleteBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        deleteDepartment(dept);
+                    };
+
+                    li.appendChild(deptName);
+                    li.appendChild(deleteBtn);
+                    deptList.appendChild(li);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Load departments on page load
+    window.onload = loadDepartments;
+
+    // Handle add department form submission
+    document.getElementById('addDeptForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const newDept = document.getElementById('newDept').value;
+
+        fetch('http://localhost:8080/api/departments/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain'
+            },
+            body: newDept // Send as plain text, not JSON
+        })
+        .then(response => response.text())
+        .then(message => {
+            document.getElementById('addMessage').textContent = message;
+            document.getElementById('newDept').value = ''; // Clear input
+            loadDepartments(); // Refresh the list
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+    // Delete department function
+    function deleteDepartment(deptName) {
+        fetch(`http://localhost:8080/api/departments/delete/${encodeURIComponent(deptName)}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.text())
+        .then(message => {
+            alert(message); // Show message
+            loadDepartments(); // Refresh the list
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+
+</body>
+</html>

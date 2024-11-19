@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2 id="deptName"></h2>
+    <p>Welcome to the department page for <span id="deptTitle"></span>. Choose an option below to view details:</p>
+
+    <div class="button-group">
+        <!-- Students Button -->
+        <button class="btn btn-primary" id="studentsBtn">Students</button>
+        
+        <!-- Faculties Button -->
+        <button class="btn btn-secondary" id="facultiesBtn">Faculties</button>
+    </div>
+</div>
+
+<script>
+    // Get department name from URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const deptName = urlParams.get('dept');
+    document.getElementById('deptName').textContent = `Department: ${deptName}`;
+    document.getElementById('deptTitle').textContent = deptName;
+
+    // Set up button links
+    document.getElementById('studentsBtn').onclick = function () {
+        window.location.href = `deptclass.html?dept=${encodeURIComponent(deptName)}`;
+    };
+
+    document.getElementById('facultiesBtn').onclick = function () {
+        window.location.href = `deptFaculty.html?dept=${encodeURIComponent(deptName)}`;
+    };
+</script>
+
+</body>
+</html>

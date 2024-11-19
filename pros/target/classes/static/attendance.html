@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            color: #0d6efd;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .table-container {
+            margin: 20px auto;
+            width: 90%;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            background-color: #ffffff;
+        }
+
+        thead {
+            background-color: #0d6efd;
+            color: #ffffff;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f1f1f1;
+        }
+
+        tbody tr:hover {
+            background-color: #dbe9ff;
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            display: block;
+            margin: 20px auto;
+            background-color: #0d6efd;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+
+        select {
+            width: 100px;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        #attendanceDisplay {
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div class="table-container">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Roll Number</th>
+                    <th>Name</th>
+                    <th>Attendance</th>
+                </tr>
+            </thead>
+            <tbody id="studentTableBody">
+                <!-- Student details will be populated here -->
+            </tbody>
+        </table>
+    </div>
+    <div class="container mt-4">
+        <button id="submitAttendance" class="btn btn-success">Submit Attendance</button>
+    </div>
+
+    <!-- Section to display attendance records -->
+    <div id="attendanceDisplay" class="container mt-4">
+        <h3 class="text-center text-primary">Attendance Records</h3>
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Roll Number</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Day</th>
+                    <th>Period</th>
+                </tr>
+            </thead>
+            <tbody id="attendanceRecordsBody">
+                <!-- Attendance records will be displayed here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const classId = urlParams.get('classId');
+        const facultyId = urlParams.get('facultyId');
+        const worksId = urlParams.get('worksId');
+        
+        console.log(worksId);
+        const attendanceMap = {}; // To store attendance status
+        let period = "NULL"; // Default period if not fetched
+
+        // Fetch period and load students
+        if (classId && facultyId && worksId) {
+            fetch(`http://localhost:8080/api/works/${worksId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.period) {
+                        period = data.period;
+                        console.log(`Period fetched successfully: ${period}`);
+                    } else {
+                        console.error('Period not found for worksId');
+                    }
+                })
+                .catch(error => console.error('Error fetching period:', error))
+                .finally(() => {
+                    loadStudents(); // Load students after period is fetched
+                });
+        } else {
+            console.error("Required parameters not provided in URL.");
+        }
+
+        // Fetch and display students
+        function loadStudents() {
+            fetch(`http://localhost:8080/api/students/class/${classId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const studentTableBody = document.getElementById('studentTableBody');
+                    if (data.length === 0) {
+                        studentTableBody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">No students found for this class.</td></tr>';
+                    } else {
+                        data.forEach(student => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${student.rollNumber}</td>
+                                <td>${student.name}</td>
+                                <td>
+                                    <select id="attendance-${student.rollNumber}" onchange="updateAttendance('${student.rollNumber}')">
+                                        <option value="Present">Present</option>
+                                        <option value="Absent">Absent</option>
+                                    </select>
+                                </td>
+                            `;
+                            studentTableBody.appendChild(row);
+                            attendanceMap[student.rollNumber] = "Present"; // Default
+                        });
+                    }
+                })
+                .catch(error => console.error('Error fetching students:', error));
+        }
+
+        // Update attendance for a student
+        function updateAttendance(rollNumber) {
+            const selectBox = document.getElementById(`attendance-${rollNumber}`);
+            attendanceMap[rollNumber] = selectBox.value;
+        }
+
+        // Submit attendance
+        document.getElementById('submitAttendance').addEventListener('click', () => {
+            const attendanceData = [];
+            const today = new Date();
+
+const yyyy = today.getFullYear();
+const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+const dd = String(today.getDate()).padStart(2, '0');
+
+const date = `${yyyy}-${mm}-${dd}`;
+            const day = new Date().toLocaleString('en-us', { weekday: 'long' });
+
+            for (const rollNumber in attendanceMap) {
+                const row = document.getElementById(`attendance-${rollNumber}`).closest('tr');
+                const name = row.querySelector('td:nth-child(2)').textContent;
+                attendanceData.push({
+                    rollNumber,
+                    name,
+                    attendanceStatus: attendanceMap[rollNumber],
+                    classId,
+                    facultyId,
+                    period,
+                    date,
+                    day
+                });
+            }
+
+            fetch('http://localhost:8080/api/attendance', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(attendanceData),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Attendance submitted successfully!');
+                        displayAttendanceRecords(attendanceData);
+                    } else {
+                        return response.json().then(error => {
+                            throw new Error(error.message || 'Failed to submit attendance');
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error submitting attendance:', error);
+                    alert('Error submitting attendance: ' + error.message);
+                });
+        });
+
+        // Display attendance records
+        function displayAttendanceRecords(attendanceData) {
+            const attendanceRecordsBody = document.getElementById('attendanceRecordsBody');
+            attendanceRecordsBody.innerHTML = '';
+            attendanceData.forEach(record => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.rollNumber}</td>
+                    <td>${record.name}</td>
+                    <td>${record.attendanceStatus}</td>
+                    <td>${record.date}</td>
+                    <td>${record.day}</td>
+                    <td>${record.period}</td>
+                `;
+                attendanceRecordsBody.appendChild(row);
+            });
+        }
+    </script>
+</body>
+
+</html>
