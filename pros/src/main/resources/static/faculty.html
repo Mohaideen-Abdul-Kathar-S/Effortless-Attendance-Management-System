@@ -1,0 +1,223 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>Faculty Details</h2>
+    <div id="facultyDetails" class="mt-4">
+        <!-- Faculty details will be displayed here -->
+    </div>
+
+    <!-- Works Form -->
+    <h3 class="mt-5">Add or Update Works</h3>
+    <form id="worksForm" class="mt-3">
+        <input type="hidden" id="facultyId" name="id"/>
+
+        <div class="form-group">
+            <label for="departmentYearSession">Department - Year - Class:</label>
+            <select id="departmentYearSession" name="departmentYearSession" class="form-control mb-2" required>
+                <option value="">Select Department - Year - Class</option>
+                <!-- Options will be populated by JavaScript -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="period">Period:</label>
+            <input type="text" id="period" name="period" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="day">Day:</label>
+            <input type="text" id="day" name="day" class="form-control">
+        </div>
+
+        <button type="button" onclick="saveWorksDetails()" class="btn btn-primary mt-3">Save Works Details</button>
+    </form>
+
+    <!-- Previously Stored Data Table -->
+    <h4 class="mt-5">Periods</h4>
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Department</th>
+                <th>Year</th>
+                <th>Class</th>
+                <th>Period</th>
+                <th>Day</th>
+                <th>Actions</th> 
+            </tr>
+        </thead>
+        <tbody id="worksTableBody">
+            <!-- Stored works data will be inserted here -->
+        </tbody>
+    </table>
+
+    <a href="deptFaculty.html?dept=<your_department>" class="btn btn-secondary mt-4">Back to Faculty List</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const facultyId = urlParams.get('id');
+
+    // Function to load faculty details
+    function loadFacultyDetails() {
+        $.get(`/api/faculty/${facultyId}`, function (data) {
+            $('#facultyDetails').html(`
+                <p><strong>Name:</strong> ${data.name}</p>
+                <p><strong>ID:</strong> ${data.id}</p>
+                <p><strong>Department:</strong> ${data.department}</p>
+            `);
+            // Set hidden input for faculty ID
+            $('#facultyId').val(data.id);
+            // Load works data if available
+            loadWorksData();
+        });
+    }
+
+    function loadWorksData() {
+    $.get(`/api/faculty/${facultyId}/works`)
+        .done(function (data) {
+            if (data.length === 0) {
+                $('#worksTableBody').html('<tr><td colspan="6" class="text-center">No works data available</td></tr>');
+                return;
+            }
+
+            let tableContent = '';
+            data.forEach(works => {
+                tableContent += `
+                    <tr>
+                        <td>${works.department}</td>
+                        <td>${works.year}</td>
+                        <td>${works.session}</td>
+                        <td>${works.period}</td>
+                        <td>${works.day}</td>
+                        <td><button onclick="deleteWork('${works.id}')" class="btn btn-danger btn-sm">Delete</button></td>
+                    </tr>
+                `;
+            });
+            $('#worksTableBody').html(tableContent);
+        })
+        .fail(function (jqXHR) {
+            console.error('Error fetching works data:', jqXHR.responseText);
+            alert('Error loading works data!');
+        });
+}
+
+
+    // Function to load available department-year-class options
+    // Function to load available department-year-class options
+function loadDepartmentYearClassOptions() {
+    $.get(`/api/class/all`) // Fetch all classes
+        .done(function (data) {
+            if (!data || data.length === 0) {
+                alert('No classrooms available to display!');
+                return;
+            }
+
+            // Map class options with IDs
+            const classMap = {}; // Store class details with ID for easy lookup
+            let options = '<option value="">Select Department - Year - Class</option>';
+            data.forEach(item => {
+                const department = item.department || 'Unknown';
+                const year = item.year || 'Unknown';
+                const session = item.session || 'Unknown';
+                const id = item.id || 'Unknown';
+
+                classMap[`${department}-${year}-${session}`] = id; // Map class option to ID
+                options += `<option value="${department}-${year}-${session}">
+                                ${department} - ${year} - ${session}
+                            </option>`;
+            });
+
+            // Store the mapping globally for later use
+            window.classMap = classMap;
+
+            // Populate the dropdown
+            $('#departmentYearSession').html(options);
+        })
+        .fail(function (jqXHR) {
+            console.error('Error fetching classroom data:', jqXHR.responseText);
+            alert('Error fetching classroom data!');
+        });
+}
+
+function saveWorksDetails() {
+    const selectedValue = $('#departmentYearSession').val();
+    if (!selectedValue) {
+        alert('Please select a valid Department - Year - Class!');
+        return;
+    }
+
+    // Retrieve class ID from the mapping
+    const classId = window.classMap[selectedValue];
+    if (!classId) {
+        alert('Invalid class selection!');
+        return;
+    }
+
+    const [department, year, session] = selectedValue.split('-');
+    const worksData = {
+        classId, // Add classId to the payload
+        department,
+        year,
+        session,
+        period: $('#period').val(),
+        day: $('#day').val()
+    };
+
+    $.ajax({
+        url: `/api/faculty/${facultyId}/works`,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(worksData),
+        success: function (response) {
+            alert('Works details saved successfully!');
+            loadWorksData();
+            $('#worksForm')[0].reset();
+            $('#departmentYearSession').val(''); // Reset dropdown
+        },
+        error: function (jqXHR) {
+            console.error('Error details:', jqXHR.responseText);
+            alert(`Error saving works details: ${jqXHR.responseText}`);
+        }
+    });
+}
+
+// On page load, populate dropdown
+$(document).ready(function () {
+    loadFacultyDetails();
+    loadDepartmentYearClassOptions();
+});
+
+
+
+
+    // Function to delete work details
+    function deleteWork(workId) {
+        $.ajax({
+            url: `/api/faculty/${facultyId}/works/${workId}`,
+            type: 'DELETE',
+            success: function(response) {
+                alert('Work details deleted successfully!');
+                loadWorksData();
+            },
+            error: function(jqXHR) {
+                console.error('Error details:', jqXHR.responseText);
+                alert(`Error deleting work details: ${jqXHR.responseText}`);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        loadFacultyDetails();
+    });
+</script>
+
+</body>
+</html>

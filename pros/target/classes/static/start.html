@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page - Attendance Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f1f1f1;
+            scroll-behavior: smooth;
+        }
+
+        html {
+            scroll-padding-top: 60px;
+        }
+
+        .navbar {
+            background-color: #2C3E50;
+        }
+
+        .navbar a {
+            color: white !important;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .navbar .navbar-brand {
+            font-size: 1.4rem;
+        }
+
+        .hero-section {
+    background-size: cover;
+    background-position: center;
+    height: 80vh;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px;
+}
+
+
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: 600;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            font-weight: 400;
+        }
+
+        .btn-primary, .btn-secondary {
+            width: 200px;
+            margin: 15px;
+            font-size: 1.1rem;
+        }
+
+        .footer {
+            background-color: #34495E;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .footer a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .about-section {
+            padding: 50px 0;
+            background-color: #ffffff;
+        }
+
+        .about-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #2C3E50;
+        }
+
+        .about-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #7f8c8d;
+        }
+
+        .team-member {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .team-member img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .feature-card {
+            margin-top: 20px;
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-card i {
+            font-size: 3rem;
+            color: #3498db;
+        }
+
+        .feature-card h4 {
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .feature-card p {
+            font-size: 1.1rem;
+            color: #2c3e50;
+        }
+
+        .mission-vision-section {
+            background-color: #f8f9fa;
+            padding: 50px 0;
+        }
+
+        .mission-vision-section .card {
+            margin: 10px;
+        }
+
+        .mission-vision-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #2C3E50;
+        }
+
+        .mission-vision-section .card-body {
+            text-align: center;
+        }
+
+        .contact-section {
+            
+            color: white;
+            padding: 50px 0;
+        }
+
+        .contact-section h3 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .contact-section p {
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .navbar-toggler-icon {
+            background-color: #fff;
+        }
+
+        .navbar-nav .nav-item .nav-link:hover {
+            color: #3498db;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="https://www.instagram.com/design__thinkers/" target="_blank">Design Thinkers</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#mission-vision">Mission & Vision</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="Extract.html">Extract Report</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    
+    <!-- Hero Section -->
+<section class="hero-section" style="background-image: url('/tht.jpg');">
+    <div>
+        <h1>Effortless Attendance Management System</h1>
+        <p>A Comprehesive Spring Web Application</p>
+        <button onclick="location.href='Management.html'" class="btn btn-primary">Management</button>
+        <button onclick="location.href='staff.id.html'" class="btn btn-secondary">Staffs</button>
+    </div>
+</section>
+
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <h2>About Our Product</h2>
+        <div class="about-content">
+            <p>The Attendance Management System is a Spring-based web application developed to simplify and streamline the management of attendance for students in educational or corporate settings. The system allows for efficient management of departments, updates to staff and student records, and the organization of timetables. It features a secure login mechanism, enabling management to perform administrative tasks such as adding or removing departments, staff members, and students. Attendance data, including staff schedules and student records, is stored and managed using MongoDB, ensuring data accuracy and reliability.
+                This application integrates a powerful Spring Framework backend with an intuitive user interface, enabling seamless user interaction and efficient data processing. By automating attendance-related tasks, the system minimizes administrative effort while maintaining precise records. Designed with scalability and adaptability in mind, this application caters to diverse organizational requirements, offering a robust solution for attendance management.
+                </p>
+        </div>
+<br>
+<hr>
+<br>
+        <h2>Meet Our Team</h2>
+        <div class="container">
+            <div class="row">
+                
+                
+                <div class="col-md-4 team-member">
+                    <img src="https://via.placeholder.com/150" alt="Team Member 1">
+                    <h4><a href="https://www.instagram.com/unique__lovely__boy/">MOHAIDEEN ABDUL KATHAR S</a></h4>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission & Vision Section -->
+    <section id="mission-vision" class="mission-vision-section">
+        <h2>Mission & Vision</h2>
+        <div class="container">
+            <div class="row">
+                <!-- Mission Card -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Mission</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Our mission is to develop a Spring-based web application for an efficient Attendance Management System. The application streamlines the process of managing staff attendance by providing features for department management, staff record updates, and timetable organization. By integrating a robust backend with a user-friendly interface, this system ensures accurate data handling and simplifies attendance tracking for administrative use</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vision Card -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Vision</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>We envision a future where technology simplifies the administrative tasks in education, making systems more efficient, transparent, and accessible. Our goal is to revolutionize educational management by providing intuitive and scalable solutions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="container py-5">
+        <h2 class="text-center">Features</h2>
+        <div class="row">
+            <!-- Feature Card 1 -->
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="fas fa-users"></i>
+                    <h4>Staff Management</h4>
+                    <p>Manage staff members effectively, including adding and removing staff as required</p>
+                </div>
+            </div>
+
+            <!-- Feature Card 2 -->
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="fas fa-calendar-check"></i>
+                    <h4>Attendance Tracking</h4>
+                    <p>Track and monitor the attendance of studnts in real-time with ease</p>
+                </div>
+            </div>
+
+            <!-- Feature Card 3 -->
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="fas fa-cogs"></i>
+                    <h4>Department Management</h4>
+                    <p>Manage various departments and assign staff to their respective roles</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="fas fa-cogs"></i>
+                    <h4>Simplified Administrative Tasks</h4>
+                    <p>Automates attendance-related processes, reducing manual effort and time consumption</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="fas fa-cogs"></i>
+                    <h4>Accurate Data Handling</h4>
+                    <p>Leverages MongoDB for reliable data storage, minimizing errors in attendance records</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="fas fa-cogs"></i>
+                    <h4>Enhanced User Experience</h4>
+                    <p>Offers a user-friendly interface, enabling seamless navigation and efficient task completion</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="fas fa-cogs"></i>
+                    <h4>Improved Productivity</h4>
+                    <p>Reduces administrative workload, allowing management to focus on other critical tasks</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="fas fa-cogs"></i>
+                    <h4>Sudents Management</h4>
+                    <p>Manage various departments and assign staff to their respective roles.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="fas fa-cogs"></i>
+                    <h4>Classes Management</h4>
+                    <p>Manage various departments and assign staff to their respective roles.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <h3>Contact Us</h3>
+        <p>If you have any questions or need support, feel free to reach out to us at <a href="mailto:designthinkersteam@gmail.com">designthinkersteam@gmail.com</a></p>
+    </section>
+
+   
+    
+        <p>&copy;.....Thank you for visiting our product..... </p>
+    </footer>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
